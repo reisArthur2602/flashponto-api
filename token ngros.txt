@@ -1,0 +1,1 @@
+.\ngrok.exe config add-authtoken 2yN77YFBXCAqPVOOFu6oixI9xa3_27AsTWGPBJaMUchXAyudr
