@@ -1,3 +1,15 @@
+
+#
+MYSQL_DATABASErailway
+MYSQL_PUBLIC_URL mysql://root:NTAcpjNtZaJktLHoSOhuOdFcaBLToMmT@turntable.proxy.rlwy.net:51816/railway
+
+MYSQL_URLmysql://root:NTAcpjNtZaJktLHoSOhuOdFcaBLToMmT@mysql.railway.internal:3306/railway
+MYSQLDATABASE railway
+MYSQLHOST mysql.railway.internal
+MYSQLPASSWORD NTAcpjNtZaJktLHoSOhuOdFcaBLToMmT
+MYSQLPORT 3306
+MYSQLUSER root
+
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 import os
