@@ -61,8 +61,11 @@ def enviar_mensagem(numero, mensagem):
     try:
         sessionId   = os.getenv("SESSION_ID")
         url   = f"http://localhost:3000/send"
-        headers = {"Content-Type":"application/json"}
-        payload = {"phone": numero, "message": mensagem,"sessionId": sessionId }
+          headers = {
+            "Content-Type": "application/json",
+            "Authorization": sessionId
+        }
+        payload = {"phone": numero, "message": mensagem,}
         requests.post(url, json=payload, headers=headers, timeout=10)
     except Exception as e:
         logging.error(f"Erro ao enviar mensagem: {e}")
