@@ -1,15 +1,3 @@
-
-#
-MYSQL_DATABASErailway
-MYSQL_PUBLIC_URL mysql://root:NTAcpjNtZaJktLHoSOhuOdFcaBLToMmT@turntable.proxy.rlwy.net:51816/railway
-
-MYSQL_URLmysql://root:NTAcpjNtZaJktLHoSOhuOdFcaBLToMmT@mysql.railway.internal:3306/railway
-MYSQLDATABASE railway
-MYSQLHOST mysql.railway.internal
-MYSQLPASSWORD NTAcpjNtZaJktLHoSOhuOdFcaBLToMmT
-MYSQLPORT 3306
-MYSQLUSER root
-
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 import os
@@ -24,6 +12,7 @@ import pytz
 import logging
 from threading import Thread
 import time as time_mod
+
 
 def coordenada_para_endereco(lat, lon):
     try:
@@ -59,14 +48,19 @@ def enviar_mensagem(numero, mensagem):
     if not numero.startswith("55"):
         numero = "55" + numero
     try:
-        sessionId   = os.getenv("SESSION_ID")
-        url   = f"http://localhost:3000/send"
-          headers = {
+        sessionId = os.getenv("SESSION_ID")
+        url = "http://localhost:3000/session/send"
+        headers = {
             "Content-Type": "application/json",
             "Authorization": sessionId
         }
-        payload = {"phone": numero, "message": mensagem,}
-        requests.post(url, json=payload, headers=headers, timeout=10)
+        payload = {
+            "to": numero,
+            "message": mensagem,
+        }
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+        logging.info(f"Mensagem enviada para {numero}")
     except Exception as e:
         logging.error(f"Erro ao enviar mensagem: {e}")
 
@@ -98,19 +92,25 @@ def ftp_upload(local, remote_dir, name):
         logging.error(f"FTP {remote_dir}: {e}")
         return False
 
+
+# ftp functions
 def upload_ftp_documento(local, name):
-    if ftp_upload(local, "/public_html/ponto/documentos", name):
-        return f"https://mastertelecom-claro.com.br/ponto/documentos/{name}"
+    # Caminho relativo no servidor FTP
+    ftp_path = "/public_html/arthurteste/documentos"
+    if ftp_upload(local, ftp_path, name):
+        return f"https://mastertelecom-claro.com.br/arthurteste/documentos/{name}"
     return None
 
 def upload_ftp_imagem_rosto(local, name):
-    if ftp_upload(local, "/public_html/ponto/imagem_rosto", name):
-        return f"https://mastertelecom-claro.com.br/ponto/imagem_rosto/{name}"
+    ftp_path = "/public_html/arthurteste/imagem_rosto"
+    if ftp_upload(local, ftp_path, name):
+        return f"https://mastertelecom-claro.com.br/arthurteste/imagem_rosto/{name}"
     return None
 
 def upload_ftp_relatorio(local, name):
-    if ftp_upload(local, "/public_html/ponto/relatorios", name):
-        return f"https://mastertelecom-claro.com.br/ponto/relatorios/{name}"
+    ftp_path = "/public_html/arthurteste/relatorios"
+    if ftp_upload(local, ftp_path, name):
+        return f"https://mastertelecom-claro.com.br/arthurteste/relatorios/{name}"
     return None
 
 def timedelta_to_time(td):
